@@ -1,31 +1,59 @@
-"use strict";
+const Ben = [
+  "Ben",
+  "willet",
+  2024 - 1991,
+  "developer",
+  ["Michael", "Peter", "Steven"],
+  true,
+  "Godmode ",
+];
+const types = [];
 
-function logger(x) {
-  console.log(x);
+for (let i = 0; i < Ben.length; i++) {
+  console.log(Ben[i], typeof Ben[i]);
+
+  // Filling types array
+  // types[i] = typeof Ben[i];
+  types.push(typeof Ben[i]);
+  console.log(types);
 }
 
-// Arrow function
-const calcAge3 = (birthyear) => 2032 - birthyear;
-const age3 = calcAge3(1921);
-logger(age3);
+const years = [1991, 2007, 1969, 2020];
+const ages = []; // 2021 - 1991
 
-const yearsUntilRetirement = (birthYear, firstName) => {
-  const age = 2024 - birthYear;
-  const retirement = 65 - age;
-  return `${firstName} retires in ${retirement} years`;
-};
-console.log(yearsUntilRetirement(1991, "Ben"));
+for (let i = 0; i < years.length; i++) {
+  ages.push(2024 - years[i]);
+}
+console.log(ages);
 
-// Functions calling other functions
+console.log("REVERSE");
 
-function cutFruitPieces(fruit) {
-  return fruit * 4;
+for (let i = Ben.length - 1; i >= 0; i--) {
+  console.log(i, Ben[i]);
 }
 
-function fruitProcessor(apples, oranges) {
-  const applePieces = cutFruitPieces(apples);
-  const orangePieces = cutFruitPieces(oranges);
-  const juice = `Juice with ${applePieces} applepieces and ${orangePieces} orangepieces`;
-  return juice;
+// loop inside a loop
+
+// for (let exercise = 1; exercise < 4; exercise++) {
+//   console.log(`-----------starting exercise ${exercise}`);
+//   for (let rep = 1; rep < 6; rep++) {
+//     console.log(`Exercise ${exercise} lifting weight repetition ${rep}`);
+//   }
+// }
+
+//WHILE LOOP
+let rep = 1;
+while (rep <= 10) {
+  console.log(` WHILE: lifting weight repetition ${rep}`);
+  rep++;
 }
-console.log(fruitProcessor(8, 12));
+
+let randomNumber = Math.trunc(Math.random() * 6) + 1;
+
+while (randomNumber !== 6) {
+  console.log(`you rolled a ${randomNumber}!  keep going son!`);
+  randomNumber = Math.trunc(Math.random() * 6) + 1;
+}
+if (randomNumber === 6) {
+  console.log("HURRAY you are the rollmaster boi");
+}
