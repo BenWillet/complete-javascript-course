@@ -93,21 +93,25 @@ const poll = {
     ${this.options[2]}
     ${this.options[3]}
     (Write option number)`);
-    if (!answer) {
-      console.log('Error, no input found');
-    } else if ((answer = 0)) {
-      this.answers[0]++;
-      console.log(answers);
-    } else if ((answer = 1)) {
-      this.answers[1]++;
-      console.log(answers);
-    } else if ((answer = 2)) {
-      this.answers[2]++;
-      console.log(answers);
-    }
-
-    return console.log(answer);
+    return insertAnswer(answer);
   },
 };
+const insertAnswer = answer => {
+  if (!answer) {
+    console.log('Error, no input found');
+  } else if (answer === 0) {
+    poll.answers[0]++;
+  } else if (answer === 1) {
+    poll.answers[1]++;
+  } else if (answer === 2) {
+    poll.answers[2]++;
+  } else if (answer === 3) {
+    poll.answers[3]++;
+  } else {
+    console.log('Error, not a valid number');
+  }
+  console.log(poll.answers);
+};
+
 poll.registerNewAnswer();
 console.log(poll);
