@@ -80,7 +80,7 @@ BONUS TEST DATA 2: [1, 5, 3, 9, 6, 1]
 
 GOOD LUCK 😀
 */
-
+const button = document.querySelector('.poll');
 const poll = {
   question: 'What is your favourite programming language?',
   options: ['0: JavaScript', '1: Python', '2: Rust', '3: C++'],
@@ -99,19 +99,24 @@ const poll = {
 const insertAnswer = answer => {
   if (!answer) {
     console.log('Error, no input found');
-  } else if (answer === 0) {
+  } else if (answer === '0') {
     poll.answers[0]++;
-  } else if (answer === 1) {
+  } else if (answer === '1') {
     poll.answers[1]++;
-  } else if (answer === 2) {
+  } else if (answer === '2') {
     poll.answers[2]++;
-  } else if (answer === 3) {
+  } else if (answer === '3') {
     poll.answers[3]++;
   } else {
     console.log('Error, not a valid number');
   }
-  console.log(poll.answers);
+  displayResults(poll.answers);
 };
 
-poll.registerNewAnswer();
-console.log(poll);
+button.addEventListener('click', function () {
+  poll.registerNewAnswer();
+});
+
+const displayResults = type => {
+  console.log(type);
+};
