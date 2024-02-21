@@ -2,6 +2,37 @@
 
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
+const renderCountry = function (data, className = '') {
+  const html = `
+    <article class="country ${className}">
+      <img class="country__img" src="${data.flags.png}" />
+      <div class="country__data">
+        <h3 class="country__name">${data.name.common}</h3>
+        <h4 class="country__region">${data.region}</h4>
+        <p class="country__row"><span>👫</span>${(
+          +data.population / 1000000
+        ).toFixed(1)}M people</p>
+        <p class="country__row"><span>🗣️</span>${data.languages.nob}</p>
+        <p class="country__row"><span>💰</span>${data.currencies.NOK.name}</p>
+      </div>
+    </article>
+    `;
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.style.opacity = 1;
+};
+
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  countriesContainer.style.opacity = 1;
+};
+
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
 
 ///////////////////////////////////////
 
@@ -31,30 +62,67 @@ TEST COORDINATES 2: -33.933, 18.474
 GOOD LUCK 😀
 */
 
-const whereAmI = function (lat, lng) {
-  fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
-    .then(response => {
-      console.log(response);
+// const whereAmI = function (lat, lng) {
+//   fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error(`${response.status} Location not found`);
+//       }
+//       return response.json();
+//     })
+//     .then(data => {
+//       console.log(`You are in ${data.city}, ${data.country}`);
+//       console.log('Geolocation:');
+//       console.log(data);
+//       return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
+//     })
+//     .then(res => {
+//       if (!res.ok) {
+//         console.log(`${res.status} No country found`);
+//       }
+//       console.log('Country API:');
+//       return res.json();
+//     })
 
-      if (!response) {
-        throw new Error(`${response.status}Location not found `);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-      console.log(`You are in ${data.city}, ${data.country}`);
-    }) 
-    return fetch (`https://restcountries.eu/rest/v2/name/${data.country}`);
-}.then (res => {
-    if (!res) {
-        console.log(`${res.status} No country found `);
-        return res
-    }
-})
-    .catch(err => {
-      console.log(`${err}, something went wrong`);
-    });
+//     .then(data => renderCountry(data[0]))
+
+//     .catch(err => {
+//       console.error(`${err.message}, something went wrong`);
+//     });
+// };
+
+// btn.addEventListener('click', function () {
+//   whereAmI(52.508, 13.381);
+// });
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
 };
 
-whereAmI(52.508, 13.381);
+const whereAmI = async function () {
+  try {
+    // Get Cordinations from geolocation:
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+    const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    if (!resGeo.ok) throw new Error('Problem getting location data');
+    const dataGeo = await resGeo.json();
+    console.log(dataGeo);
+
+    // Use the geo location to fetch country data
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo.country}`
+    );
+    if (!res.ok) throw new Error('Problem getting country data');
+    const [data] = await res.json();
+    console.log(data);
+    renderCountry(data);
+  } catch (err) {
+    console.error(err);
+    renderError(`Something went wrong! ${error.message}`);
+  }
+};
+
+whereAmI();
